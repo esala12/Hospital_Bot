@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>hospital_bot_navigation</name>
+  <version>0.0.0</version>
+  <description>
+    A ROS 2 package for navigation functionalities of the hospital_bot robot using the Navigation2 stack.
+  </description>
+  <maintainer email="esalasithumperera@gmail.com">esala</maintainer>
+  <license>Apache-2.0</license>  <!-- Choose a proper license, Apache-2.0 is a common choice -->
+
+  <!-- Build tool dependencies -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Direct dependencies required by the package -->
+  <depend>rclcpp</depend>  <!-- ROS 2 C++ client library -->
+  <depend>nav2_bringup</depend>  <!-- For launching Nav2 -->
+  <depend>nav2_common</depend>  <!-- Common utilities for Nav2 -->
+  <depend>nav2_core</depend>  <!-- Core interfaces for Nav2 -->
+  <depend>nav2_util</depend>  <!-- Utilities for Nav2 -->
+  <depend>nav2_msgs</depend>  <!-- Message types for Nav2 -->
+  <depend>tf2_ros</depend>  <!-- For transforming frames in ROS -->
+  <depend>geometry_msgs</depend>  <!-- Messages related to robot geometry -->
+  <depend>sensor_msgs</depend>  <!-- Messages related to sensor data (e.g., LaserScan) -->
+  <depend>std_msgs</depend>  <!-- Standard message types -->
+  <depend>nav_msgs</depend>  <!-- Messages related to navigation (e.g., map, paths) -->
+
+  <!-- Test dependencies for linting and testing -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <!-- Export section -->
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

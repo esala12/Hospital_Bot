@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<robot name="hospital_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+     <ros2_control type="system" name="RobotSystem">
+       <hardware>
+         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+       </hardware>
+   
+       <joint name="wheel_right_joint">
+         <command_interface name="velocity"/>
+         <state_interface name="position"/>
+         <state_interface name="velocity"/>
+       </joint>
+   
+       <joint name="wheel_left_joint">
+         <command_interface name="velocity"/>
+         <state_interface name="position"/>
+         <state_interface name="velocity"/>
+       </joint>
+     </ros2_control>
+   
+     <transmission name="right_wheel_trans">
+       <type>transmission_interface/SimpleTransmission</type>
+       <joint name="wheel_right_joint">
+         <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+       </joint>
+       <actuator name="right_motor">
+         <mechanicalReduction>1</mechanicalReduction>
+       </actuator>
+     </transmission>
+   
+     <transmission name="left_wheel_trans">
+       <type>transmission_interface/SimpleTransmission</type>
+       <joint name="wheel_left_joint">
+         <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+       </joint>
+       <actuator name="left_motor">
+         <mechanicalReduction>1</mechanicalReduction>
+       </actuator>
+     </transmission>
+   
+   </robot>
+   
