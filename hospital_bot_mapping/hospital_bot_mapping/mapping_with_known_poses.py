@@ -164,7 +164,7 @@ class MappingWithKnownPoses(Node):
             for pose, value in poses:
                 cell = poseToCell(pose, self.map_.info)  
                 self.probability_map_[cell] += prob2logodds(value) - prob2logodds(PROIOR_PROB)
-
+                
     def timer_callback(self):
         # Update the map's timestamp and publish the map
         self.map_.header.stamp = self.get_clock().now().to_msg()
