@@ -12,6 +12,10 @@ class MotorControlTransmitter(Node):
     def __init__(self):
         super().__init__('motor_control_transmitter')
 
+        # Declare and get the serial port parameter
+        self.declare_parameter('serial_port', '/dev/ttyACM0')
+        serial_port = self.get_parameter('serial_port').get_parameter_value().string_value
+
         # Subscribe to the /cmd_vel topic
         self.subscription = self.create_subscription(
             Twist,
@@ -24,7 +28,7 @@ class MotorControlTransmitter(Node):
         self.feedback_publisher = self.create_publisher(Twist, '/robot_velocity_feedback', 10)
 
         # Initialize the serial connection with retries
-        self.serial_port = self.connect_serial()
+        self.serial_port = self.connect_serial(serial_port)
 
         if not self.wait_for_arduino_ready():
             self.get_logger().error("Arduino did not send 'READY' signal. Shutting down.")
@@ -37,18 +41,17 @@ class MotorControlTransmitter(Node):
         self.feedback_thread = threading.Thread(target=self.read_feedback, daemon=True)
         self.feedback_thread.start()
 
-    def connect_serial(self):
+    def connect_serial(self, port):
         """Attempt to connect to the Arduino serial port with retries."""
-        static_serial_port = '/dev/ttyACM0'  # Set your static serial port here
         max_retries = 5
         for attempt in range(max_retries):
             try:
-                return serial.Serial(static_serial_port, 115200, timeout=1)
+                return serial.Serial(port, 115200, timeout=1)
             except serial.SerialException as e:
-                self.get_logger().warn(f"Failed to open {static_serial_port}: {e}")
+                self.get_logger().warn(f"Failed to open {port}: {e}")
                 time.sleep(2)  # Wait before retrying
 
-        self.get_logger().error("Unable to connect to Arduino after multiple attempts.")
+        self.get_logger().error(f"Unable to connect to Arduino on {port} after multiple attempts.")
         sys.exit(1)
 
     def wait_for_arduino_ready(self, max_retries=10, delay=0.5):
