@@ -3,9 +3,19 @@
 <robot name="hospital_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
      <ros2_control type="system" name="RobotSystem">
-       <hardware>
-         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-       </hardware>
+
+      <xacro:if value="$(arg is_sim)">
+        <hardware>
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+      </xacro:if>
+
+      <xacro:unless>
+        <hardware>
+          <plugin>hospital_bot_firmware/HospitalBotInterface</plugin>
+          <param name="port">/dev/ttyACM0</param>
+        </hardware>
+      </xacro:unless> 
    
        <joint name="wheel_right_joint">
          <command_interface name="velocity"/>

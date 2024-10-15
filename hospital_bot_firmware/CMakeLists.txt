@@ -8,15 +8,54 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(PkgConfig REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
+pkg_check_modules(SERIAL libserial)
 
 ament_python_install_package(${PROJECT_NAME})
+
+add_library(${PROJECT_NAME} SHARED
+  src/hospital_bot_interface.cpp
+)
+target_include_directories(${PROJECT_NAME} PRIVATE
+  include
+  "${SERIAL_INCLUDE_DIRS}"
+)
+target_link_libraries(${PROJECT_NAME} "${SERIAL_LDFLAGS}")
+ament_target_dependencies(${PROJECT_NAME}
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+)
+
+pluginlib_export_plugin_description_file(hardware_interface src/hospital_bot_interface.xml)
 
 install(PROGRAMS
   ${PROJECT_NAME}/simple_serial_transmiter.py
   ${PROJECT_NAME}/simple_serial_reciever.py
+  ${PROJECT_NAME}/rpm_transmitter.py
+  ${PROJECT_NAME}/velocity_reciever.py
+  ${PROJECT_NAME}/odometry_publish.py
+  ${PROJECT_NAME}/tf_publisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
+install(
+  TARGETS ${PROJECT_NAME}
+  DESTINATION lib
+)
+
+install(
+  DIRECTORY include
+  DESTINATION include
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -25,4 +64,16 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_include_directories(
+  include
+)
+ament_export_libraries(
+  ${PROJECT_NAME}
+)
+ament_export_dependencies(
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+)
 ament_package()

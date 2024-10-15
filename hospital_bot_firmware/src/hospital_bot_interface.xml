@@ -1,0 +1,9 @@
+<library path="hospital_bot_firmware">
+     <class name="hospital_bot_firmware/HospitalBotInterface"
+               type="hospital_bot_firmware::HospitalBotInterface"
+               base_class_type = "hardware_interface::SystemInterface">
+          <description>
+               Hospitalbot_hardware_interface
+          </description>
+     </class>
+</library>
