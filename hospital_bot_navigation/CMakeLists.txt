@@ -12,6 +12,7 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclpy REQUIRED)  # Add this if you're using Python (rclpy)
 find_package(rclcpp REQUIRED)  # ROS 2 C++ library
 find_package(nav2_bringup REQUIRED)  # Navigation2 bringup
 find_package(nav2_common REQUIRED)  # Common utilities in Nav2
@@ -30,18 +31,14 @@ ament_python_install_package(${PROJECT_NAME})
 # Install Python scripts
 install(PROGRAMS
   ${PROJECT_NAME}/cmd_vel_relay.py
+  ${PROJECT_NAME}/wave_point_follower.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# Add executables or libraries if needed, e.g.,
-# add_executable(${PROJECT_NAME}_node src/navigation_node.cpp)
-
-# Install directories
+# Install directories (launch files, params, etc.)
 install(DIRECTORY launch param rviz
   DESTINATION share/${PROJECT_NAME}
 )
-
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

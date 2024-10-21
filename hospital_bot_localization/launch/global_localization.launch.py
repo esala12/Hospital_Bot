@@ -13,7 +13,7 @@ def generate_launch_description():
 
     map_name_arg = DeclareLaunchArgument(
         "map_name",
-        default_value="small_house"
+        default_value="floor"
     )
 
     amcl_config_arg = DeclareLaunchArgument(
@@ -36,7 +36,7 @@ def generate_launch_description():
         get_package_share_directory("hospital_bot_mapping"),
         "maps",
         map_name,
-        "map.yaml"
+        "floor.yaml"
     ])
 
     # Map server with transform tolerance

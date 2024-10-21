@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>hospital_bot_navigation</name>
   <version>0.0.0</version>
@@ -14,6 +13,7 @@
 
   <!-- Direct dependencies required by the package -->
   <depend>rclcpp</depend>  <!-- ROS 2 C++ client library -->
+  <depend>rclpy</depend>   <!-- ROS 2 Python client library -->
   <depend>nav2_bringup</depend>  <!-- For launching Nav2 -->
   <depend>nav2_common</depend>  <!-- Common utilities for Nav2 -->
   <depend>nav2_core</depend>  <!-- Core interfaces for Nav2 -->
