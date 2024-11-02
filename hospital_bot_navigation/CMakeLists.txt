@@ -32,6 +32,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   ${PROJECT_NAME}/cmd_vel_relay.py
   ${PROJECT_NAME}/wave_point_follower.py
+  ${PROJECT_NAME}/wave_point_time.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
