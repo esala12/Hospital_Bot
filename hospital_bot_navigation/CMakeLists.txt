@@ -33,6 +33,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/cmd_vel_relay.py
   ${PROJECT_NAME}/wave_point_follower.py
   ${PROJECT_NAME}/wave_point_time.py
+  ${PROJECT_NAME}/filter.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
