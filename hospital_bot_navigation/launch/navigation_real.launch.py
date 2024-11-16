@@ -15,7 +15,7 @@ def generate_launch_description():
 
     map_name_arg = DeclareLaunchArgument(
         "map_name",
-        default_value="floor"
+        default_value="movindu_down"
     )
 
     amcl_config_arg = DeclareLaunchArgument(
@@ -37,7 +37,7 @@ def generate_launch_description():
         get_package_share_directory('hospital_bot_mapping'),
         'maps',
         map_name,
-        'floor.yaml'
+        'movindu_down.yaml'
     ])
 
     param_file_name = 'nav2_params_real.yaml'  # This is now referencing the correct file

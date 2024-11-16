@@ -5,7 +5,7 @@ from rclpy.node import Node
 from nav2_simple_commander.robot_navigator import BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class WaypointNavigator(Node):
     def __init__(self):
@@ -15,12 +15,27 @@ class WaypointNavigator(Node):
         self.navigator = BasicNavigator()
 
     def wait_until_time(self, target_hour, target_minute):
+        # Calculate the target time today
+        now = datetime.now()
+        target_time = now.replace(hour=target_hour, minute=target_minute, second=0, microsecond=0)
+
+        # If the target time has already passed today, assume it's for the next day
+        if target_time <= now:
+            target_time += timedelta(days=1)
+
         # Keep checking the current time until the specified hour and minute
         while rclpy.ok():
             now = datetime.now()
-            if now.hour == target_hour and now.minute == target_minute:
+            remaining_time = target_time - now
+
+            # Print remaining time in HH:MM:SS format
+            self.get_logger().info(f"Time until start: {str(remaining_time).split('.')[0]}")
+
+            # Break the loop when the target time is reached
+            if remaining_time.total_seconds() <= 0:
                 self.get_logger().info(f"Starting navigation at {target_hour:02d}:{target_minute:02d}")
                 break
+
             time.sleep(1)  # Check every second
 
     def set_initial_pose(self, initial_pose):
@@ -40,7 +55,8 @@ class WaypointNavigator(Node):
         self.navigator.setInitialPose(initial_pose_msg)
         self.get_logger().info("Initial pose set.")
 
-    def go_to_waypoints(self, waypoints):
+    def go_to_waypoints(self, waypoints, wait_time=5):
+        
         # Wait for the Navigation server to be ready
         self.navigator.waitUntilNav2Active()
 
@@ -76,32 +92,31 @@ class WaypointNavigator(Node):
                 self.get_logger().info("Failed to reach the waypoint!")
                 break
 
-            # Sleep between waypoints (optional)
-            time.sleep(1)
-
-        # The navigator lifecycle will remain active; no shutdown
+            # Wait at the waypoint
+            self.get_logger().info(f"Waiting for {wait_time} seconds at the waypoint.")
+            time.sleep(wait_time)
 
 def main(args=None):
     rclpy.init(args=args)
     waypoint_navigator = WaypointNavigator()
 
-    # Wait until 3:00 PM
-    waypoint_navigator.wait_until_time(15, 0)
+    # Wait until 6:35 AM
+    waypoint_navigator.wait_until_time(18, 53)
 
     # Set the initial pose
-    initial_pose = (0.542567253112793, -0.028166532516479492, 0.0030893283324285804, 0.9999952280138413)  # (x, y, orientation z, orientation w)
+    initial_pose = (0.0, 0.0, 0.002339403188309809, 0.9999972635926173)  # (x, y, orientation z, orientation w)
     waypoint_navigator.set_initial_pose(initial_pose)
 
     # Define the specific goal positions from the /goal_pose topic
     waypoints = [
-        (3.412578582763672, -0.010426491498947144, 0.014212131535267307, 0.9998990025583705),  # Waypoint 1
-        (3.5233993530273438, -2.744586706161499, -0.6972588084887705, 0.7168194709861193),     # Waypoint 2
-        (6.6157402992248535, 0.18376551568508148, 0.003028785785491401, 0.9999954132178135),    # Waypoint 3
-        (0.542567253112793, -0.028166532516479492, 0.0030893283324285804, 0.9999952280138413)   # Waypoint 4
+        (5.179640769958496, -2.0815277099609375, 0.02013735309341808, 0.9997972229459287),  # Waypoint 1
+        (0.5983695983886719, -4.00203800201416, -0.9999972238405127, 0.0023563342860463436),  # Waypoint 2
+        (-5.9140729904174805, -2.9068262577056885, -0.9994980968003662, 0.03167892820859885),   # Waypoint 3
+        (0.0, 0.0, 0.0, 1.0)
     ]
 
-    # Navigate through the waypoints
-    waypoint_navigator.go_to_waypoints(waypoints)
+    # Navigate through the waypoints and wait for 10 seconds at each waypoint
+    waypoint_navigator.go_to_waypoints(waypoints, wait_time=10)
 
     # Do not shut down anything after completing the waypoints
 
